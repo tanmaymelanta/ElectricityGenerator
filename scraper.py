@@ -2,18 +2,14 @@ from playwright.sync_api import sync_playwright
 import pandas as pd
 
 URL = "https://grid-india.in/en/reports/daily-psp-report"
-
+print(URL)
 with sync_playwright() as p:
-
-    browser = p.chromium.launch(
-        headless=True,
-        args=["--no-sandbox"]
-    )
-
+    browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
+    print(f"browser {browser}")
     page = browser.new_page(viewport={"width": 1920, "height": 1080})
-
+    print(f"page {page}")
     page.goto(URL, wait_until="networkidle")
-
+    print("page goto url")
     # Wait until page loads
     page.wait_for_selector("table")
 
