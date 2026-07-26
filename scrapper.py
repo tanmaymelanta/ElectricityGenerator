@@ -1,35 +1,45 @@
 from playwright.sync_api import sync_playwright
 import pandas as pd
 
-URL = "https://example.com"
+URL = "https://grid-india.in/en/reports/daily-psp-report"
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False)  # Set True for background execution
-    page = browser.new_page()
 
-    # Open webpage
+    browser = p.chromium.launch(
+        headless=True,
+        args=["--no-sandbox"]
+    )
+
+    page = browser.new_page(viewport={"width": 1920, "height": 1080})
+
     page.goto(URL, wait_until="networkidle")
 
-    # Wait until table is visible
+    # Wait until page loads
     page.wait_for_selector("table")
 
-    # Get the first table
-    table = page.locator("table").first
+    # Click Financial Year dropdown
+    page.locator("div[role='button']").first.click()
 
-    # Extract headers
-    headers = table.locator("thead tr th").all_inner_texts()
+    # Select 2013-14
+    page.get_by_text("2013-14", exact=True).click()
 
-    # Extract rows
+    # Wait for table refresh
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(3000)
+
+    table = page.locator("table")
+
+    headers = table.locator("thead th").all_inner_texts()
+
     rows = []
+
     for row in table.locator("tbody tr").all():
         rows.append(row.locator("td").all_inner_texts())
 
     browser.close()
 
-# Convert to DataFrame
 df = pd.DataFrame(rows, columns=headers)
 
 print(df)
 
-# Save to CSV
-df.to_csv("table_data.csv", index=False)
+df.to_csv("daily_psp_2013_14.csv", index=False)
