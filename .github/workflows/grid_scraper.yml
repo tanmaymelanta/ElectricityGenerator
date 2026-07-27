@@ -20,6 +20,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Test connectivity
+        run: curl -v "https://grid-india.in/en/reports/daily-psp-report"
+
       - name: Install Google Chrome
         uses: browser-actions/setup-chrome@v1
 
