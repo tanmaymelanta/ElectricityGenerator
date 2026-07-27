@@ -6,9 +6,9 @@ from selenium.webdriver.chrome.options import Options
 import pandas as pd
 from bs4 import BeautifulSoup
 
-options = Options()
-options.add_argument("--start-maximized")
-driver = webdriver.Chrome(options=options)
+# options = Options()
+# options.add_argument("--start-maximized")
+driver = webdriver.Chrome()#options=options)
 
 driver.get("https://grid-india.in/en/reports/daily-psp-report")
 wait = WebDriverWait(driver, 20)
