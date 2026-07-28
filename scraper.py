@@ -16,24 +16,24 @@ options.add_argument("--disable-blink-features=AutomationControlled")
 options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36")
 driver = webdriver.Chrome(options=options)
 
-# driver.get("https://grid-india.in/en/reports/daily-psp-report")
-# wait = WebDriverWait(driver, 20)
+driver.get("https://grid-india.in/en/reports/daily-psp-report")
+wait = WebDriverWait(driver, 20)
 
-# table = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div[1]/main/div/div[3]/div/div/div[2]/table')))
-# table_html = table.get_attribute("outerHTML")
+table = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div[1]/main/div/div[3]/div/div/div[2]/table')))
+table_html = table.get_attribute("outerHTML")
 
-# soup = BeautifulSoup(table_html, 'html.parser')
-# table = soup.find('table')
-# all_data = []
-# for tr in table.find('tbody').find_all('tr'):
-#     row_data = [td.get_text(strip=True) for td in tr.find_all('td')]
-#     download_view_td = tr.find_all('td')[-1]
-#     href = download_view_td.find('a', href=True)['href'] if download_view_td.find('a', href=True) else None
-#     row_data.append(href)
-#     all_data.append(row_data)
-# headers = [th.get_text(strip=True) for th in table.find('thead').find_all('th')]
-# headers.append('URL')
-# df = pd.DataFrame(all_data, columns=headers)
-# driver.quit()
+soup = BeautifulSoup(table_html, 'html.parser')
+table = soup.find('table')
+all_data = []
+for tr in table.find('tbody').find_all('tr'):
+    row_data = [td.get_text(strip=True) for td in tr.find_all('td')]
+    download_view_td = tr.find_all('td')[-1]
+    href = download_view_td.find('a', href=True)['href'] if download_view_td.find('a', href=True) else None
+    row_data.append(href)
+    all_data.append(row_data)
+headers = [th.get_text(strip=True) for th in table.find('thead').find_all('th')]
+headers.append('URL')
+df = pd.DataFrame(all_data, columns=headers)
+driver.quit()
 
 print(df)
